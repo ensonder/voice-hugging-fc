@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<title>Gwen Voice Generator</title>
+
+<style>
+
+body{
+font-family:Comic Sans MS;
+background:#F7F9FF;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+}
+
+.container{
+background:white;
+padding:40px;
+border-radius:20px;
+width:500px;
+text-align:center;
+box-shadow:0 10px 25px rgba(0,0,0,0.1);
+}
+
+textarea{
+width:100%;
+height:150px;
+padding:15px;
+border-radius:12px;
+border:2px solid #ddd;
+font-size:16px;
+margin-bottom:20px;
+}
+
+button{
+background:#6C8CFF;
+color:white;
+border:none;
+padding:15px 25px;
+border-radius:12px;
+font-size:18px;
+cursor:pointer;
+}
+
+button:hover{
+transform:scale(1.05);
+}
+
+.download{
+margin-top:10px;
+background:#FFB86B;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>🎤 Gwen Voice Generator</h1>
+
+<textarea id="text" placeholder="Enter script..."></textarea>
+
+<br>
+
+<button onclick="generate()">Generate Voice</button>
+
+<div id="audioArea"></div>
+
+</div>
+
+<script>
+
+async function generate(){
+
+const text = document.getElementById("text").value
+const audioArea = document.getElementById("audioArea")
+
+audioArea.innerHTML="Generating..."
+
+const res = await fetch("/api/tts",{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify({text})
+})
+
+const data = await res.json()
+
+audioArea.innerHTML = `
+
+<audio controls src="${data.audio}"></audio>
+
+<br>
+
+<a href="${data.audio}" download="voice.wav">
+<button class="download">Download</button>
+</a>
+
+`
+
+}
+
+</script>
+
+</body>
+
+</html>
